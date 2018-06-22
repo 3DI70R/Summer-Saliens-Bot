@@ -13,7 +13,6 @@ Script logic:
 
 # TODO
 - Error handling
-- Level up notification handling
 
 ---
 
