@@ -130,6 +130,7 @@ function onLoop() {
     } else if(isInBattle()) {
         battleDamageEnemies()
         battleExitOnVictory()
+        battleExitOnLevelUp()
     } else if(isInBattleSelection()) {
         battleSelectionPickHighestLevel()
     }
