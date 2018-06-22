@@ -1,18 +1,21 @@
 // ==UserScript==
-// @name         Summer Saliens Bot
+// @name         Salien bot
 // @namespace    http://tampermonkey.net/
 // @version      0.1
-// @description  Bot for steam summer sale game "Summer Saliens"
+// @description  Bot for steam summer sale game "Salien"
 // @author       3DI70R
 // @match        https://steamcommunity.com/saliengame/play/
 // @grant        none
 // ==/UserScript==
 
 var isVictoryButtonClicked = false
+var isLevelUpButtonClicked = false
 var isGridSelected = false
+var isBootButtonClicked = false
 var lastState = null
 
 function getCurrentState() {
+    if(isInBootScreen()) { return "boot" }
     if(isInBattleSelection()) { return "battle_selection" }
     if(isInBattle()) { return "battle" }
 }
@@ -20,6 +23,21 @@ function getCurrentState() {
 function onStateChanged(oldState, newState) {
     isGridSelected = false
     isVictoryButtonClicked = false
+    isBootButtonClicked = false
+    isLevelUpButtonClicked = false
+}
+
+function isInBootScreen() {
+    return gGame.m_State instanceof CBootState
+}
+
+function bootScreenEnterGame() {
+    var button = gGame.m_State.button
+    if(button && !isBootButtonClicked) {
+        console.log("Game started")
+        button.click()
+        isBootButtonClicked = true
+    }
 }
 
 function isInBattleSelection() {
@@ -44,7 +62,7 @@ function battleSelectionPickHighestLevel() {
             var y = Math.floor(pos / 12)
 
             if(gGame.m_State.m_Grid && !isGridSelected) {
-                console.log("Staring new game at zone " + pos + " at: " + x + ", " + y)
+                console.log("Staring new game in zone " + pos + " at: " + x + ", " + y)
                 gGame.m_State.m_Grid.click(x, y)
                 isGridSelected = true
             }
@@ -78,6 +96,15 @@ function battleExitOnVictory() {
     }
 }
 
+function battleExitOnLevelUp() {
+    var levelUpScreen = gGame.m_State.m_LevelUpScreen
+    if(levelUpScreen && !isLevelUpButtonClicked) {
+        console.log("Level up!")
+        gGame.m_State.m_LevelUpScreen.children[1].click()
+        isLevelUpButtonClicked = true
+    }
+}
+
 function checkStateChange() {
     var currentState = getCurrentState()
 
@@ -89,7 +116,10 @@ function checkStateChange() {
 
 function onLoop() {
     checkStateChange()
-    if(isInBattle()) {
+
+    if(isInBootScreen()) {
+        bootScreenEnterGame()
+    } else if(isInBattle()) {
         battleDamageEnemies()
         battleExitOnVictory()
     } else if(isInBattleSelection()) {
