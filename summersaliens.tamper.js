@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Salien bot
-youtube.com// @namespace    http://tampermonkey.net/
+// @namespace    http://tampermonkey.net/
 // @version      0.5
 // @description  Bot for steam summer sale game "Salien"
 // @author       3DI70R
@@ -19,10 +19,10 @@ function fireLaserAt(x, y) {
     var xOrig = mouse.x
     var yOrig = mouse.y
     mouse.x = x
-	mouse.y = y
+    mouse.y = y
     gGame.m_State.FireLaser()
     mouse.x = xOrig
-	mouse.y = yOrig
+    mouse.y = yOrig
 }
 
 function getCurrentState() {
