@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name         Salien bot
+// @name         Summer Saliens Bot
 // @namespace    http://tampermonkey.net/
 // @version      0.1
-// @description  Bot for steam summer sale game "Saliens"
+// @description  Bot for steam summer sale game "Summer Saliens"
 // @author       3DI70R
 // @match        https://steamcommunity.com/saliengame/play/
 // @grant        none
@@ -67,8 +67,9 @@ function battleDamageEnemies() {
 }
 
 function battleExitOnVictory() {
-    if(gGame.m_State.m_VictoryScreen) {
-        var victoryButton = gGame.m_State.m_VictoryScreen.children[1]
+    var victoryScreen = gGame.m_State.m_VictoryScreen
+    if(victoryScreen) {
+        var victoryButton = victoryScreen.children[1]
         if(victoryButton.visible && !isVictoryButtonClicked) {
             console.log("Victory!")
             victoryButton.click()
