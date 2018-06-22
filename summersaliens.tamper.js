@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Salien bot
 // @namespace    http://tampermonkey.net/
-// @version      0.1
+// @version      0.5
 // @description  Bot for steam summer sale game "Salien"
 // @author       3DI70R
 // @match        https://steamcommunity.com/saliengame/play/
@@ -13,6 +13,12 @@ var isLevelUpButtonClicked = false
 var isGridSelected = false
 var isBootButtonClicked = false
 var lastState = null
+
+function fireLaserAt(x, y) {
+    gApp.renderer.plugins.interaction.mouse.global.x = x
+	gApp.renderer.plugins.interaction.mouse.global.y = y;
+    gGame.m_State.FireLaser()
+}
 
 function getCurrentState() {
     if(isInBootScreen()) { return "boot" }
@@ -80,6 +86,8 @@ function battleDamageEnemies() {
         var regularEnemies = enemyManager.m_rgEnemies
         regularEnemies.forEach(function(value, id) {
             value.Damage(1);
+            var sprite = value.m_Sprite
+            fireLaserAt(sprite.x + sprite.width / 2, sprite.y + sprite.height / 2)
         })
     }
 }
