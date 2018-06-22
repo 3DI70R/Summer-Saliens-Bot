@@ -1,5 +1,5 @@
 # Saliens-Bot
-Tampermonkey userscript for 2018 steam summer sale game "Saliens"
+Tampermonkey userscript for 2018 steam summer sale game "Summer Saliens"
 
 ![Gif demo](demo.gif)
 ---
