@@ -1,6 +1,6 @@
 # Saliens-Bot
 Tampermonkey userscript for 2018 steam summer sale game "Saliens"
-
+![Gif demo](demo.gif)
 ---
 # Installation
 Load this script to tampermonkey, enter the game and select desired planet. Rest will be handled by script
