@@ -141,4 +141,6 @@ function onLoop() {
     }
 }
 
-setInterval(onLoop, 100);
+setTimeout(function() {
+    setInterval(onLoop, 100);
+}, 3000)
