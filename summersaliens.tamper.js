@@ -16,7 +16,7 @@ var lastState = null
 
 function fireLaserAt(x, y) {
     gApp.renderer.plugins.interaction.mouse.global.x = x
-	gApp.renderer.plugins.interaction.mouse.global.y = y;
+    gApp.renderer.plugins.interaction.mouse.global.y = y;
     gGame.m_State.FireLaser()
 }
 
