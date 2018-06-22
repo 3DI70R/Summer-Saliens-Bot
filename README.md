@@ -11,6 +11,10 @@ Script logic:
 3) Clicks "Continue" button when victory screen is displayed
 4) Goto 1
 
+# TODO
+- Error handling
+- Level up notification handling
+
 ---
 
 Tested with Tampermonkey + Google Chrome
