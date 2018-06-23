@@ -8,18 +8,15 @@
 // @grant        none
 // ==/UserScript==
 
-var isVictoryButtonClicked = false
-var isLevelUpButtonClicked = false
-var isGridSelected = false
-var isBootButtonClicked = false
+var isStateFinished = false
 var lastState = null
 
 function fireLaserAt(x, y) {
     var event = {}
     event.data = {}
     event.data.global = {}
-    event.data.global.x = x;
-	event.data.global.y = y;
+    event.data.global.x = x
+    event.data.global.y = y
     gGame.m_State.FireLaser(event)
 }
 
@@ -30,10 +27,7 @@ function getCurrentState() {
 }
 
 function onStateChanged(oldState, newState) {
-    isGridSelected = false
-    isVictoryButtonClicked = false
-    isBootButtonClicked = false
-    isLevelUpButtonClicked = false
+    isStateFinished = false
 }
 
 function isInBootScreen() {
@@ -42,10 +36,10 @@ function isInBootScreen() {
 
 function bootScreenEnterGame() {
     var button = gGame.m_State.button
-    if(button && !isBootButtonClicked) {
+    if(button) {
         console.log("Game started")
         button.click()
-        isBootButtonClicked = true
+        isStateFinished = true
     }
 }
 
@@ -57,6 +51,7 @@ function battleSelectionPickHighestLevel() {
     var planetData = gGame.m_State.m_PlanetData
     if(planetData) {
         var zones = planetData.zones.slice()
+	
         zones.sort(function(l, r) {
             return r.difficulty - l.difficulty
         })
@@ -70,10 +65,10 @@ function battleSelectionPickHighestLevel() {
             var x = Math.floor(pos % 12)
             var y = Math.floor(pos / 12)
 
-            if(gGame.m_State.m_Grid && !isGridSelected) {
+            if(gGame.m_State.m_Grid) {
                 console.log("Staring new game in zone " + pos + " at: " + x + ", " + y)
                 gGame.m_State.m_Grid.click(x, y)
-                isGridSelected = true
+                isStateFinished = true
             }
         }
     }
@@ -105,20 +100,20 @@ function battleExitOnVictory() {
     var victoryScreen = gGame.m_State.m_VictoryScreen
     if(victoryScreen) {
         var victoryButton = victoryScreen.children[1]
-        if(victoryButton.visible && !isVictoryButtonClicked) {
+        if(victoryButton.visible) {
             console.log("Victory!")
             victoryButton.pointertap()
-            isVictoryButtonClicked = true
+            isStateFinished = true
         }
     }
 }
 
 function battleExitOnLevelUp() {
     var levelUpScreen = gGame.m_State.m_LevelUpScreen
-    if(levelUpScreen && !isLevelUpButtonClicked) {
+    if(levelUpScreen) {
         console.log("Level up!")
         gGame.m_State.m_LevelUpScreen.children[1].pointertap()
-        isLevelUpButtonClicked = true
+        isStateFinished = true
     }
 }
 
@@ -134,14 +129,16 @@ function checkStateChange() {
 function onLoop() {
     checkStateChange()
 
-    if(isInBootScreen()) {
-        bootScreenEnterGame()
-    } else if(isInBattle()) {
-        battleDamageEnemies()
-        battleExitOnVictory()
-        battleExitOnLevelUp()
-    } else if(isInBattleSelection()) {
-        battleSelectionPickHighestLevel()
+    if(!isStateFinished) {
+	if(isInBootScreen()) {
+            bootScreenEnterGame()
+        } else if(isInBattle()) {
+            battleDamageEnemies()
+            battleExitOnVictory()
+            battleExitOnLevelUp()
+    	} else if(isInBattleSelection()) {
+            battleSelectionPickHighestLevel()
+        }	
     }
 }
 
