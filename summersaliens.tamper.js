@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Salien bot
 // @namespace    http://tampermonkey.net/
-// @version      0.5
+// @version      0.6
 // @description  Bot for steam summer sale game "Salien"
 // @author       3DI70R
 // @match        https://steamcommunity.com/saliengame/play/
@@ -15,14 +15,12 @@ var isBootButtonClicked = false
 var lastState = null
 
 function fireLaserAt(x, y) {
-    var mouse = gApp.renderer.plugins.interaction.mouse.global
-    var xOrig = mouse.x
-    var yOrig = mouse.y
-    mouse.x = x
-    mouse.y = y
-    gGame.m_State.FireLaser()
-    mouse.x = xOrig
-    mouse.y = yOrig
+    var event = {}
+    event.data = {}
+    event.data.global = {}
+    event.data.global.x = x;
+	event.data.global.y = y;
+    gGame.m_State.FireLaser(event)
 }
 
 function getCurrentState() {
@@ -89,11 +87,17 @@ function battleDamageEnemies() {
     var enemyManager = gGame.m_State.m_EnemyManager
     if(enemyManager) {
         var regularEnemies = enemyManager.m_rgEnemies
+        var enemies = []
+
         regularEnemies.forEach(function(value, id) {
             value.Damage(1);
-            var sprite = value.m_Sprite
-            fireLaserAt(sprite.x + sprite.width / 2, sprite.y + sprite.height / 2)
+            enemies.push(value)
         })
+
+        if(enemies.length > 0) {
+            var sprite = enemies[Math.floor(Math.random() * enemies.length)].m_Sprite
+            fireLaserAt(sprite.x + sprite.width / 2, sprite.y + sprite.height / 2)
+        }
     }
 }
 
@@ -103,7 +107,7 @@ function battleExitOnVictory() {
         var victoryButton = victoryScreen.children[1]
         if(victoryButton.visible && !isVictoryButtonClicked) {
             console.log("Victory!")
-            victoryButton.click()
+            victoryButton.pointertap()
             isVictoryButtonClicked = true
         }
     }
@@ -113,7 +117,7 @@ function battleExitOnLevelUp() {
     var levelUpScreen = gGame.m_State.m_LevelUpScreen
     if(levelUpScreen && !isLevelUpButtonClicked) {
         console.log("Level up!")
-        gGame.m_State.m_LevelUpScreen.children[1].click()
+        gGame.m_State.m_LevelUpScreen.children[1].pointertap()
         isLevelUpButtonClicked = true
     }
 }
