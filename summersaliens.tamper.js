@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Salien bot
 // @namespace    http://tampermonkey.net/
-// @version      0.6
+// @version      0.7
 // @description  Bot for steam summer sale game "Salien"
 // @author       3DI70R
 // @match        https://steamcommunity.com/saliengame/play/
@@ -81,7 +81,7 @@ function isInBattle() {
 function battleDamageEnemies() {
     var enemyManager = gGame.m_State.m_EnemyManager
     if(enemyManager) {
-        var regularEnemies = enemyManager.m_rgEnemies
+        var regularEnemies = enemyManager.m_mapEnemies
         var enemies = []
 
         regularEnemies.forEach(function(value, id) {
